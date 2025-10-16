@@ -88,6 +88,7 @@ That's it! You've successfully created an AWS EKS cluster using Terraform. Feel 
 
 ![codacy-chart-eks-quickstart](https://github.com/user-attachments/assets/7d281326-1b88-4927-b079-e7f79c91e80e)
 <img width="947" height="680" alt="717-1" src="https://github.com/user-attachments/assets/e2c228d0-5de8-4e55-be1a-4da972649f07" />
+![8092f9dc-ca58-4466-ae2a-36d2bb4d371c](https://github.com/user-attachments/assets/9a8115b5-0d48-4768-b89b-dba3704b201d)
 
 
 
