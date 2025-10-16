@@ -1,15 +1,22 @@
 # configure aws provider
 provider "aws" {
   region  = var.region
-  profile = "nacromancer"
+  profile = "default"
+}
+
+# configure helm provider
+provider "helm" {
+  kubernetes = {
+    config_path = "~/.kube/config"
+  }
 }
 
 # configure backend
 terraform {
   backend "s3" {
-    bucket         = "eks-cluster-multiple-customers"
+    bucket         = "my-eks-cluster-workspace"
     key            = "terraform.tfstate"
-    region         = "ap-northeast-1"
-    profile        = "nacromancer"
+    region         = "us-east-1"
+    profile        = "default"
   }
 }

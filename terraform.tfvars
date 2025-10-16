@@ -1,11 +1,11 @@
 # Stack name
-project_name = "AWS EKS cluster for multiple customers using Terraform Modules"
+project_name = "MyAWSSandbox"
 
 # Worker Node's instance type
-instance_size = "t2.micro"
+instance_size = "t3a.medium"
 
 # Region
-region = "ap-northeast-1"
+region = "us-east-1"
 
 # UI Access
 http_access = ["0.0.0.0/0"]

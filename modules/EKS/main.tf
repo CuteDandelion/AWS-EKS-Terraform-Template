@@ -4,6 +4,11 @@ resource "aws_eks_cluster" "eks" {
   role_arn = var.master_arn
 
   vpc_config {
+
+    endpoint_private_access = true
+    endpoint_public_access  = true
+    public_access_cidrs     = ["0.0.0.0/0"]
+
     subnet_ids = [var.public_subnet_az1_id, var.public_subnet_az2_id]
   }
 
@@ -38,7 +43,7 @@ resource "aws_instance" "kubectl-server" {
   ami                         = data.aws_ami.amazon_linux_2.id
   key_name                    = var.key_name
   instance_type               = var.instance_size
-  associate_public_ip_address = true
+  #associate_public_ip_address = true
   subnet_id                   = var.public_subnet_az1_id
   vpc_security_group_ids      = [var.eks_security_group_id]
 
@@ -56,7 +61,7 @@ resource "aws_eks_node_group" "node-grp" {
   node_role_arn   = var.worker_arn
   subnet_ids      = [var.public_subnet_az1_id, var.public_subnet_az2_id]
   capacity_type   = "ON_DEMAND"
-  disk_size       = 20
+  disk_size       = 50
   instance_types  = [var.instance_size]
 
   remote_access {
@@ -70,11 +75,32 @@ resource "aws_eks_node_group" "node-grp" {
 
   scaling_config {
     desired_size = 2
-    max_size     = 2
+    max_size     = 4
     min_size     = 1
   }
 
   update_config {
     max_unavailable = 1
   }
+}
+
+
+# --- ArgoCD Installation ---
+
+resource "helm_release" "argocd" {
+ depends_on = [aws_eks_node_group.node-grp]
+ name = "argocd"
+ repository = "https://argoproj.github.io/argo-helm"
+ chart = "argo-cd"
+ version = "8.5.0"
+ namespace = "argocd"
+ create_namespace = true
+ set = [{
+   name = "server.service.type"
+   value = "LoadBalancer"
+ },
+ {
+   name = "server.service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-type"
+   value = "nlb"
+ }]
 }
